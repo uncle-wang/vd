@@ -1,0 +1,19 @@
+{
+  "name": "vd",
+  "version": "1.0.0",
+  "description": "",
+  "main": "vd.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uncle-wang/vd.git"
+  },
+  "author": "jin.wang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/uncle-wang/vd/issues"
+  },
+  "homepage": "https://github.com/uncle-wang/vd#readme"
+}

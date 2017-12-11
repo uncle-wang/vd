@@ -14,7 +14,7 @@ module.exports = function(query, callback) {
 		// 执行sql语句
 		connection.query(query, function(queryerr, results) {
 			// 执行完毕后关闭连接
-			connection.end();
+			connection.release();
 			// 如果执行出错，返回给回调函数
 			if (queryerr) {
 				callback(queryerr);

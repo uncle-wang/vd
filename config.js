@@ -1,5 +1,5 @@
 var nodeEnv = process.env.NODE_ENV;
-var mysqlConfig;
+var mysqlConfig, awsConfig;
 if (nodeEnv === 'production') {
 	mysqlConfig = {
 		host: 'localhost',
@@ -24,4 +24,13 @@ else {
 		database: 'vd_test'
 	};
 }
-module.exports.MYSQLCONFIG = mysqlConfig;
+awsConfig = {
+	accessKeyId: 'AKIAJCRO6HA6SDLY6NRA',
+	secretAccessKey: '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',
+	region: 'us-west-2',
+	bucket: 'wangjintestabcd'
+};
+module.exports = {
+	MYSQLCONFIG: mysqlConfig,
+	AWSCONFIG: awsConfig
+};

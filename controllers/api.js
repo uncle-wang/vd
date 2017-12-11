@@ -17,9 +17,38 @@ app.get('/getAlbumList', function(req, res) {
 // 添加专辑
 app.get('/addAlbum', function(req, res) {
 
-	var name = req.query.name;
-	var flag = req.query.flag;
-	var series = req.query.series;
-	var cover = req.query.cover;
-	var title = req.query.title;
+	api.addAlbum(req.query, function(err, result) {
+		if (err) {
+			res.send(err);
+		}
+		else {
+			res.send(result);
+		}
+	});
+});
+
+// 获取媒体列表
+app.get('/getMediaList', function(req, res) {
+
+	api.getMediaList(function(err, result) {
+		if (err) {
+			res.send(err);
+		}
+		else {
+			res.send(result);
+		}
+	});
+});
+
+// 添加媒体
+app.get('/addMedia', function(req, res) {
+
+	api.addMedia(req.query, function(err, result) {
+		if (err) {
+			res.send(err);
+		}
+		else {
+			res.send(result);
+		}
+	});
 });

@@ -1,8 +1,8 @@
 var fs = require('fs');
 var request = require('request');
+var cdn = require('./cdn');
 
-
-module.exports = function(prefix, urilist, storagepath, callback) {
+module.exports = function(prefix, urilist, cdnPath, callback) {
 
 	var pos = 0;
 	var downloadFile = function() {
@@ -17,6 +17,9 @@ module.exports = function(prefix, urilist, storagepath, callback) {
 				if (!(parseInt(response.headers['content-length']) > 0 && data)) {
 					console.log('data为空');
 				}
+				else {
+					cdn(cdnPath + fileName, data);
+				}
 			}
 			// 全部下载完成执行回调
 			if (++ pos >= urilist.length) {
@@ -26,7 +29,7 @@ module.exports = function(prefix, urilist, storagepath, callback) {
 			else {
 				downloadFile();
 			}
-		}).pipe(fs.createWriteStream('./ts/' + storagepath + '/' + fileName));
+		});
 	};
 	downloadFile();
 };

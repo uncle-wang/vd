@@ -1,18 +1,29 @@
-var expressIns = require('./../express'), express = expressIns.express, app = expressIns.app;
 var request = require('request');
+var cdn = require('./cdn');
 var dl = require('./dl');
 
-app.get('/cramb', function(req, res) {
-	
-	var listUrl = req.query.list_url;
+var cdnPrefix = 'ts/';
+
+var cramb = function(param, mediaId) {
+
+	var cdnPath;
+	var listUrl = param.cramb_url;
 	var fileUrlPre = listUrl.substring(0, listUrl.lastIndexOf('/'));
+	var listFileName = listUrl.substring(listUrl.lastIndexOf('/') + 1, listUrl.lastIndexOf('?'));
+	if (param.type == 1) {
+		cdnPath = cdnPrefix + 'album/' + param.album + '/' + param.album_index + '/' + mediaId + '/';
+	}
+	else {
+		cdnPath = cdnPrefix + 'single/' + mediaId + '/';
+	}
 	request(listUrl, function(err, response, data) {
 		if (err) {
 			console.log(err);
-			res.send(err);
 			return;
 		}
 		if (data) {
+			// 上传文件
+			cdn(cdnPath + listFileName, data);
 			var temArr = data.split('\n');
 			var fileUrls = [];
 			temArr.forEach(function(lineText) {
@@ -21,13 +32,12 @@ app.get('/cramb', function(req, res) {
 				}
 			});
 			if (fileUrls.length > 0) {
-				res.send('ok');
-				dl(fileUrlPre, fileUrls, 'fff', function() {
+				dl(fileUrlPre, fileUrls, cdnPath, function() {
 					console.log('ok');
 				});
-				return;
 			}
 		}
-		res.send('data错误');
 	});
-});
+};
+
+module.exports = cramb;

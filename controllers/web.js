@@ -1,10 +1,10 @@
 var
-expressInsatance = require('./express').app,
+expressInsatance = require('./../express'),
 express = expressInsatance.express,
 app = expressInsatance.app;
 
 var path = require('path');
-var htmlPath = path.resolve(__dirname, './views');
+var htmlPath = path.resolve(__dirname, './../views');
 
 app
 

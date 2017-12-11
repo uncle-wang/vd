@@ -1,5 +1,5 @@
 $.ajax({
-	url: 'http://localhost:6536/getAlbumList',
+	url: 'getAlbumList',
 	method: 'get',
 	dataType: 'json',
 	success: function(data) {

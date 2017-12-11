@@ -1,4 +1,7 @@
-var expressInsatance = require('./express').app;
+var app = require('./express').app;
+
+require('./controllers/api');
+require('./controllers/web');
 
 app
 

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>cramb url</title>
+		<script type="text/javascript" src="resources/jquery-2.1.4.min.js"></script>
+	</head>
+	<body>
+		<div class="wrap">
+			<h2>媒体-无专辑</h2>
+			<form action="cramb" method="get">
+				<div>
+					<label>媒体name</label>
+					<input name="name" type="text">
+				</div>
+				<div>
+					<label>媒体封面</label>
+					<input type="text" name="cover">
+				</div>
+				<div>
+					<label>媒体title</label>
+					<input type="text" name="title">
+				</div>
+				<div>
+					<label>源地址</label>
+					<input type="text" name="cramb_url">
+				</div>
+				<input type="hidden" name="type" value="0">
+				<input type="submit" value="ok">
+			</form>
+			<h2>媒体-有专辑</h2>
+			<form action="cramb" method="get">
+				<div>
+					<label>媒体封面</label>
+					<input type="text" name="cover">
+				</div>
+				<div>
+					<label>媒体title</label>
+					<input type="text" name="title">
+				</div>
+				<div>
+					<label>媒体专辑</label>
+					<select name="album" id="album_list"></select>
+				</div>
+				<div>
+					<label>媒体专辑序列</label>
+					<input type="text" name="album_index">
+				</div>
+				<div>
+					<label>源地址</label>
+					<input type="text" name="cramb_url">
+				</div>
+				<input type="hidden" name="type" value="1">
+				<input type="submit" value="ok">
+			</form>
+			<h2>专辑</h2>
+			<form action="cramb" method="get">
+				<div>
+					<label>专辑name</label>
+					<input name="name" type="text">
+				</div>
+				<div>
+					<label>是否存在序列</label>
+					<input type="checkbox" name="flag">
+				</div>
+				<div>
+					<label>专辑序列号</label>
+					<input type="text" name="series">
+				</div>
+				<div>
+					<label>专辑封面</label>
+					<input type="text" name="cover">
+				</div>
+				<div>
+					<label>专辑title</label>
+					<input type="text" name="title">
+				</div>
+				<input type="submit" value="ok">
+			</form>
+		</div>
+		<script type="text/javascript" src="resources/cramb.js"></script>
+	</body>
+</html>

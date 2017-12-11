@@ -1,21 +1,6 @@
-var
-path = require('path'),
-expressInsatance = require('./express'),
-express = expressInsatance.express,
-app = expressInsatance.app;
-
-var htmlPath = path.resolve(__dirname, './views');
+var expressInsatance = require('./express').app;
 
 app
-
-// 资源路径
-.use('/resources', express.static('resources'))
-
-// 根路径
-.get('/', function(req, res) {
-
-	res.sendFile(path.join(htmlPath, 'video.html'));
-})
 
 // 404
 .use(function(req, res) {

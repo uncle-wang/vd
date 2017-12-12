@@ -23,7 +23,17 @@ var cramb = function(param, mediaId) {
 		}
 		if (data) {
 			// 上传文件
-			cdn(cdnPath + listFileName, data);
+			cdn(cdnPath + listFileName, data, {
+				option: {'Content-Type': 'application/vnd.apple.mpegurl'},
+				callback: function(err) {
+					if (err) {
+						console.log(err);
+					}
+					else {
+						console.log('ok: ' + listFileName);
+					}
+				}
+			});
 			var temArr = data.split('\n');
 			var fileUrls = [];
 			temArr.forEach(function(lineText) {
@@ -32,9 +42,7 @@ var cramb = function(param, mediaId) {
 				}
 			});
 			if (fileUrls.length > 0) {
-				dl(fileUrlPre, fileUrls, cdnPath, function() {
-					console.log('ok');
-				});
+				dl(fileUrlPre, fileUrls, cdnPath);
 			}
 		}
 	});

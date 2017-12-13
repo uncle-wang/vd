@@ -4,17 +4,15 @@ var dl = require('./dl');
 
 var cdnPrefix = 'ts/';
 
-var cramb = function(param, mediaId) {
+var cramb = function(param, mediaId, callback) {
 
-	var cdnPath;
+	var start = 0;
 	var listUrl = param.cramb_url;
 	var fileUrlPre = listUrl.substring(0, listUrl.lastIndexOf('/'));
 	var listFileName = listUrl.substring(listUrl.lastIndexOf('/') + 1, listUrl.lastIndexOf('?'));
-	if (param.type == 1) {
-		cdnPath = cdnPrefix + 'album/' + param.album + '/' + param.album_index + '/' + mediaId + '/';
-	}
-	else {
-		cdnPath = cdnPrefix + 'single/' + mediaId + '/';
+	var cdnPath = Math.floor(mediaId / 50) + '/' + mediaId + '/';
+	if (param.start_point) {
+		start = parseInt(param.start_point);
 	}
 	request(listUrl, function(err, response, data) {
 		if (err) {
@@ -24,7 +22,7 @@ var cramb = function(param, mediaId) {
 		if (data) {
 			// 上传文件
 			cdn(cdnPath + listFileName, data, {
-				option: {'Content-Type': 'application/vnd.apple.mpegurl'},
+				option: {ContentType: 'application/vnd.apple.mpegurl'},
 				callback: function(err) {
 					if (err) {
 						console.log(err);
@@ -39,10 +37,11 @@ var cramb = function(param, mediaId) {
 			temArr.forEach(function(lineText) {
 				if (lineText && lineText[0] !== '#') {
 					fileUrls.push(lineText);
-				}
+				}				
 			});
+			fileUrls = fileUrls.slice(start);
 			if (fileUrls.length > 0) {
-				dl(fileUrlPre, fileUrls, cdnPath);
+				dl(fileUrlPre, fileUrls, cdnPath, mediaId, callback);
 			}
 		}
 	});

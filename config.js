@@ -28,7 +28,7 @@ awsConfig = {
 	accessKeyId: 'AKIAJCRO6HA6SDLY6NRA',
 	secretAccessKey: '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',
 	region: 'us-west-2',
-	bucket: 'wangjintestabcd'
+	bucket: 'mjwts'
 };
 module.exports = {
 	MYSQLCONFIG: mysqlConfig,

@@ -1,51 +1,64 @@
-var fs = require('fs');
 var request = require('request');
 var cdn = require('./cdn');
 
-module.exports = function(prefix, urilist, cdnPath) {
+module.exports = function(prefix, urilist, cdnPath, mediaId, callback) {
 
-	var pos = 0;
+	var downloadPos = uploadPos = 0;
+	var hasError = false;
 
-	var checkPos = function() {
-		// 全部下载、上传完成执行回调
-		if (pos >= urilist.length) {
-			// 要执行的操作
-		}
-		// 否则执行下一次下载、上传
-		else {
-			downloadFile();
+	var checkUploadProcess = function() {
+		// 全部上传完成执行回调
+		if (uploadPos >= urilist.length) {
+			if (hasError) {
+				console.log('upload completely with error');
+			}
+			// 所有文件上传成功则修改媒体的发布状态
+			else {
+				console.log('upload completely without error');
+				callback(mediaId);
+			}
 		}
 	};
 
 	var downloadFile = function() {
 
-		var uriItem = urilist[pos];
+		var uriItem = urilist[downloadPos];
 		var fileName = uriItem.substring(0, uriItem.indexOf('?'));
 		var url = prefix + '/' + uriItem;
-		request(url, function(err, response, data) {
+		request({url: url, encoding: null}, function(err, response, data) {
 			if (err) {
-				pos ++;
+				uploadPos ++;
+				hasError = true;
 				console.log(err);
-				checkPos();
+				checkUploadProcess();
 			}
 			else {
 				if (!(parseInt(response.headers['content-length']) > 0 && data)) {
-					pos ++;
+					uploadPos ++;
+					hasError = true;
 					console.log('data为空');
-					checkPos();
+					checkUploadProcess();
 				}
 				else {
 					cdn(cdnPath + fileName, data, {
-						option: {'Content-Type': 'video/MP2T'},
+						option: {ContentType: 'video/MP2T'},
 						callback: function(err) {
+							uploadPos ++;
 							if (err) {
+								hasError = true;
 								console.log(err);
 							}
-							pos ++;
-							checkPos();
+							checkUploadProcess();
 						}
 					});
 				}
+			}
+
+			if (++ downloadPos >= urilist.length) {
+				console.log('download completely');
+			}
+			else {
+				downloadFile();
 			}
 		});
 	};

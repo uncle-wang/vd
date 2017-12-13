@@ -14,14 +14,13 @@ var getAlbumList = function(callback) {
 var addAlbum = function(param, callback) {
 
 	var name = param.name;
+	var length = param.length;
 	var cover = param.cover;
 	var title = param.title;
-	var flag = param.flag;
-	var series = param.series;
 	var keys, values;
 
-	keys = 'ALBUM_NAME,ALBUM_STATUS,ALBUM_PUBLISHED';
-	values = '"' + name + '",0,0';
+	keys = 'ALBUM_NAME,ALBUM_STATUS,ALBUM_PUBLISHED,ALBUM_LENGTH';
+	values = '"' + name + '",0,0,' + length;
 	if (cover) {
 		keys += ',ALBUM_COVER';
 		values = values + ',"' + cover + '"';
@@ -29,15 +28,6 @@ var addAlbum = function(param, callback) {
 	if (title) {
 		keys += ',ALBUM_TITLE';
 		values = values + ',"' + title + '"';
-	}
-	// 如果专辑是带序列的
-	if (flag) {
-		keys += ',ALBUM_FLAG,ALBUM_SERIES';
-		values = values + ',1,' + series;
-	}
-	else {
-		keys += ',ALBUM_FLAG';
-		values += ',0';
 	}
 
 	var query = 'INSERT INTO ALBUM(' + keys + ') VALUES(' + values + ')';
@@ -58,13 +48,16 @@ var getMediaList = function(callback) {
 // 添加媒体
 var addMedia = function(param, callback) {
 
+	var playFileName = param.cramb_url.substring(param.cramb_url.lastIndexOf('/') + 1, param.cramb_url.lastIndexOf('?'))
 	var keys, values;
-	keys = 'MEDIA_TYPE,MEDIA_PUBLISHED';
-	values = param.type + ',0';
+	keys = 'MEDIA_TYPE,MEDIA_PUBLISHED,MEDIA_PLAYLIST';
+	values = param.type + ',0,"' + playFileName + '"';
+	// 无专辑
 	if (param.type == 0) {
 		keys += ',MEDIA_NAME';
 		values = values + ',"' + param.name + '"';
 	}
+	// 有专辑
 	else {
 		keys += ',MEDIA_ALBUM,MEDIA_ALBUM_INDEX';
 		values = values + ',' + param.album + ',' + param.album_index;
@@ -82,8 +75,31 @@ var addMedia = function(param, callback) {
 		callback(err, result);
 		if (!err) {
 			if (result && result.affectedRows == 1) {
-				cramb(param, result.insertId);
+				cramb(param, result.insertId, _publishMedia);
 			}
+		}
+	});
+};
+
+// 编辑媒体
+var editMedia = function(param) {
+
+	cramb(param, parseInt(param.media_id), _publishMedia);
+};
+
+// 发布媒体
+var _publishMedia = function(mediaId) {
+
+	var query = 'update MEDIA set MEDIA_PUBLISHED=1 where MEDIA_ID=' + mediaId;
+	db(query, function(err, result) {
+		if (err) {
+			console.log('publish media(' + mediaId + ') error', err);
+		}
+		else if (result.affectedRows !== 1) {
+			console.log('publish affect 0 rows(' + mediaId + ')');
+		}
+		else {
+			console.log('publish media(' + mediaId + ') successfully');
 		}
 	});
 };
@@ -92,5 +108,6 @@ module.exports = {
 	getAlbumList: getAlbumList,
 	addAlbum: addAlbum,
 	getMediaList: getMediaList,
-	addMedia: addMedia
+	addMedia: addMedia,
+	editMedia: editMedia
 };

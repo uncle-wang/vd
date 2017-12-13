@@ -52,3 +52,10 @@ app.get('/addMedia', function(req, res) {
 		}
 	});
 });
+
+// 编辑媒体
+app.get('/editMedia', function(req, res) {
+
+	res.send('ok');
+	api.editMedia(req.query);
+});

@@ -173,78 +173,6 @@ Vue.component('player', {
 	mounted: function() {
 
 		var _self = this;
-		_self.video = _self.$el.querySelector('video.player-video');
-
-		// 判断是否支持hls
-		if (Hls.isSupported()) {
-			var hls = new Hls();
-			hls.attachMedia(_self.video);
-			hls.on(Hls.Events.MEDIA_ATTACHED, function () {
-				hls.loadSource(_self.url);
-			});
-		}
-		else {
-			_self.video.setAttribute('src', _self.url);
-		}
-
-		// 绑定事件
-		// 视频就绪
-		_self.video.oncanplaythrough = function() {
-			_self.canPlay = true;
-			_self.showLoading = false;
-		};
-		// 时长变化
-		_self.video.ondurationchange = function() {
-			_self.totalDuration = Math.floor(_self.video.duration);
-		};
-		// 播放
-		_self.video.onplay = function() {
-			_self.playing = true;
-			_self.showPlayButton = false;
-		};
-		// 暂停
-		_self.video.onpause = function() {
-			_self.playing = false;
-		};
-		// 播放进度发生变化
-		_self.video.ontimeupdate = function() {
-			_self.currentTime = Math.floor(_self.video.currentTime);
-		};
-		_self.video.onwaiting = function() {
-			_self.showLoading = true;
-		};
-		_self.video.onseeking = function() {
-			_self.showLoading = true;
-		};
-
-		_self.video.onerror = function() {
-			_self.tlog('error');
-		};
-		_self.video.onstalled = function() {
-			_self.tlog('网速失速');
-		};
-		_self.video.onended = function() {
-			_self.tlog('ended');
-		};
-
-		// 更新已缓冲区域
-		var updateBuffered = function() {
-			setInterval(function() {
-				var pos = 0;
-				var buffered = _self.video.buffered;
-				var currentTime = _self.video.currentTime;
-				// 计算当前播放时间在第几段缓冲区域内，并取该段区域的结束位置作为计算已缓冲区域百分比的节点
-				for (var i = 0; i < buffered.length; i ++) {
-					var bufferedStart = buffered.start(i), bufferedEnd = buffered.end(i);
-					if (currentTime >= bufferedStart && currentTime <= bufferedEnd) {
-						_self.bufferedPercent = (bufferedEnd * 100 / _self.totalDuration) + '%';
-						break;
-					}
-				}
-			}, 500);
-		};
-		updateBuffered();
-
 		// loading动画
 		var pos = 0;
 		var loading = function() {
@@ -257,5 +185,88 @@ Vue.component('player', {
 			}, 30);
 		};
 		loading();
+	},
+
+	watch: {
+
+		url: function(url) {
+	
+			var _self = this;
+
+			if (url) {
+
+				_self.video = _self.$el.querySelector('video.player-video');
+
+				// 判断是否支持hls
+				if (Hls.isSupported()) {
+					var hls = new Hls();
+					hls.attachMedia(_self.video);
+					hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+						hls.loadSource(_self.url);
+					});
+				}
+				else {
+					_self.video.setAttribute('src', _self.url);
+				}
+
+				// 绑定事件
+				// 视频就绪
+				_self.video.oncanplaythrough = function() {
+					_self.canPlay = true;
+					_self.showLoading = false;
+				};
+				// 时长变化
+				_self.video.ondurationchange = function() {
+					_self.totalDuration = Math.floor(_self.video.duration);
+				};
+				// 播放
+				_self.video.onplay = function() {
+					_self.playing = true;
+					_self.showPlayButton = false;
+				};
+				// 暂停
+				_self.video.onpause = function() {
+					_self.playing = false;
+				};
+				// 播放进度发生变化
+				_self.video.ontimeupdate = function() {
+					_self.currentTime = Math.floor(_self.video.currentTime);
+				};
+				_self.video.onwaiting = function() {
+					_self.showLoading = true;
+				};
+				_self.video.onseeking = function() {
+					_self.showLoading = true;
+				};
+
+				_self.video.onerror = function() {
+					_self.tlog('error');
+				};
+				_self.video.onstalled = function() {
+					_self.tlog('网速失速');
+				};
+				_self.video.onended = function() {
+					_self.tlog('ended');
+				};
+
+				// 更新已缓冲区域
+				var updateBuffered = function() {
+					setInterval(function() {
+						var pos = 0;
+						var buffered = _self.video.buffered;
+						var currentTime = _self.video.currentTime;
+						// 计算当前播放时间在第几段缓冲区域内，并取该段区域的结束位置作为计算已缓冲区域百分比的节点
+						for (var i = 0; i < buffered.length; i ++) {
+							var bufferedStart = buffered.start(i), bufferedEnd = buffered.end(i);
+							if (currentTime >= bufferedStart && currentTime <= bufferedEnd) {
+								_self.bufferedPercent = (bufferedEnd * 100 / _self.totalDuration) + '%';
+								break;
+							}
+						}
+					}, 500);
+				};
+				updateBuffered();
+			}
+		}
 	}
 });

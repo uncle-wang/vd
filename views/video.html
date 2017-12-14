@@ -10,12 +10,44 @@
 	</head>
 	<body>
 		<div id="player_page">
-			<player url="https://s3-us-west-2.amazonaws.com/mjwts/0/17/s0022e3dqqh.321002.ts.m3u8"></player>
+			<player :url="videoUrl"></player>
 		</div>
 		<div class="logs" style="height: 200px; overflow: auto; color: #fff"></div>
 		<script type="text/javascript" src="resources/component/player/player.js"></script>
 		<script type="text/javascript">
-			var vmPlayer = new Vue({el: '#player_page'});
+			var vmPlayer = new Vue({
+				el: '#player_page',
+				data: {
+					videoUrl: null
+				},
+				beforeMount: function() {
+					var self = this;
+					var search = location.search;
+					if (search) {
+						search = search.substr(1);
+						searchList = search.split('&');
+						for (var i = 0; i < searchList.length; i ++) {
+							var searchPair = searchList[i];
+							if (searchPair.indexOf('mediaId=') > -1) {
+								var mediaId = searchPair.substr(8);
+								if (mediaId) {
+									var url = 'getMediaDetail?mediaId=' + mediaId;
+									var xhr = new XMLHttpRequest();
+									xhr.open('GET', url);
+									xhr.onload = function() {
+										if (this.status == 200) {
+											var mediaData = JSON.parse(this.response);
+											self.videoUrl = 'https://s3-us-west-2.amazonaws.com/mjwts/' + Math.floor(mediaData.MEDIA_ID / 50) + '/' + mediaId + '/' + mediaData.MEDIA_PLAYLIST;
+										}
+									};
+									xhr.send();
+								}
+								return;
+							}
+						}
+					}
+				}
+			});
 		</script>
 	</body>
 </html>

@@ -2,7 +2,7 @@ var nodeEnv = process.env.NODE_ENV;
 var mysqlConfig, awsConfig;
 if (nodeEnv === 'production') {
 	mysqlConfig = {
-		host: 'localhost',
+		host: '172.17.0.2',
 		user: 'root',
 		password: 'admin',
 		database: 'vd'
@@ -10,7 +10,7 @@ if (nodeEnv === 'production') {
 }
 else if (nodeEnv === 'test') {
 	mysqlConfig = {
-		host: 'localhost',
+		host: '172.17.0.2',
 		user: 'root',
 		password: 'admin',
 		database: 'vd_test'

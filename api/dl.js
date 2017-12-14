@@ -15,7 +15,7 @@ module.exports = function(prefix, urilist, cdnPath, mediaId, callback) {
 			}
 			// 所有文件上传成功则修改媒体的发布状态
 			else {
-				console.log('upload(' + mediaId + ') completely without error');
+				console.log('upload(' + mediaId + ') successfully');
 				callback(mediaId);
 			}
 		}
@@ -56,7 +56,7 @@ module.exports = function(prefix, urilist, cdnPath, mediaId, callback) {
 			}
 
 			if (++ downloadPos >= urilist.length) {
-				console.log('download(' + mediaId + ') completely');
+				console.log('download(' + mediaId + ') successfully');
 			}
 			else {
 				downloadFile();

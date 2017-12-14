@@ -75,7 +75,7 @@ var addMedia = function(param, callback) {
 		callback(err, result);
 		if (!err) {
 			if (result && result.affectedRows == 1) {
-				cramb(param, result.insertId, _publishMedia);
+				cramb(param.cramb_url, result.insertId, _publishMedia);
 			}
 		}
 	});
@@ -84,7 +84,7 @@ var addMedia = function(param, callback) {
 // 编辑媒体
 var editMedia = function(param) {
 
-	cramb(param, parseInt(param.media_id), _publishMedia);
+	cramb(param.cramb_url, parseInt(param.media_id), _publishMedia);
 };
 
 // 发布媒体

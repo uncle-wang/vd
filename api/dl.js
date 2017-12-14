@@ -41,7 +41,7 @@ module.exports = function(prefix, urilist, cdnPath, mediaId, callback) {
 					checkUploadProcess();
 				}
 				else {
-					cdn(cdnPath + fileName, data, {
+					cdn.upload(cdnPath + fileName, data, {
 						option: {ContentType: 'video/MP2T'},
 						callback: function(err) {
 							uploadPos ++;

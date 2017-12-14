@@ -2,7 +2,23 @@ var AWS = require('aws-sdk');
 var AWSCONFIG = require('./../config').AWSCONFIG;
 AWS.config.update(AWSCONFIG);
 
-module.exports = function(path, data, param) {
+var getList = function(path, callback) {
+
+	var s3 = new AWS.S3();
+	s3.listObjects({
+		Bucket: 'mjwts',
+		Prefix: path
+	}, function(err, data) {
+		if (err) {
+			callback(err);
+		}
+		else {
+			callback(null, data.Contents);
+		}
+	});
+};
+
+var upload = function(path, data, param) {
 
 	var s3 = new AWS.S3();
 
@@ -29,3 +45,5 @@ module.exports = function(path, data, param) {
 		}
 	});
 };
+
+module.exports = {upload: upload, getList: getList};

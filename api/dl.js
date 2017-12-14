@@ -3,18 +3,19 @@ var cdn = require('./cdn');
 
 module.exports = function(prefix, urilist, cdnPath, mediaId, callback) {
 
-	var downloadPos = uploadPos = 0;
+	var uploadPos = 0;
+	var downloadPos = 0;
 	var hasError = false;
 
 	var checkUploadProcess = function() {
 		// 全部上传完成执行回调
 		if (uploadPos >= urilist.length) {
 			if (hasError) {
-				console.log('upload completely with error');
+				console.log('upload(' + mediaId + ') completely with error');
 			}
 			// 所有文件上传成功则修改媒体的发布状态
 			else {
-				console.log('upload completely without error');
+				console.log('upload(' + mediaId + ') completely without error');
 				callback(mediaId);
 			}
 		}
@@ -55,7 +56,7 @@ module.exports = function(prefix, urilist, cdnPath, mediaId, callback) {
 			}
 
 			if (++ downloadPos >= urilist.length) {
-				console.log('download completely');
+				console.log('download(' + mediaId + ') completely');
 			}
 			else {
 				downloadFile();

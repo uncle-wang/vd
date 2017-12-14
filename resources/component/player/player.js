@@ -76,7 +76,8 @@ Vue.component('player', {
 		moveProgress: function(e) {
 			var processList = this.$el.querySelector('.player-process-list');
 			var processListWidth = processList.clientWidth || processList.offsetWidth;
-			this.video.currentTime = this.totalDuration * e.offsetX / processListWidth;
+			this.currentTime = this.totalDuration * e.offsetX / processListWidth;
+			this.video.currentTime = this.currentTime;
 		},
 		// 触摸进度条按钮时暂停播放
 		touchStart: function(e) {

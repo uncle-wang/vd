@@ -95,9 +95,6 @@ var _publishMedia = function(mediaId) {
 		if (err) {
 			console.log('publish media(' + mediaId + ') error', err);
 		}
-		else if (result.affectedRows !== 1) {
-			console.log('publish affect 0 rows(' + mediaId + ')');
-		}
 		else {
 			console.log('publish media(' + mediaId + ') successfully');
 		}

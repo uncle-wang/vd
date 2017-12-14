@@ -25,8 +25,8 @@ else {
 	};
 }
 awsConfig = {
-	accessKeyId: 'AKIAJCRO6HA6SDLY6NRA',
-	secretAccessKey: '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',
+	accessKeyId: 'AKIAJWMUBT3U6TBWGEEQ',
+	secretAccessKey: '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',
 	region: 'us-west-2',
 	bucket: 'mjwts'
 };

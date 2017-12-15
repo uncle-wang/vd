@@ -1,6 +1,8 @@
 var app = require('./express').app;
 
-require('./controllers/api');
+// 加载后台管理模块
+require('./controllers/manage');
+// 加载web站模块
 require('./controllers/web');
 
 app

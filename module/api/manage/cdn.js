@@ -1,5 +1,5 @@
 var AWS = require('aws-sdk');
-var AWSCONFIG = require('./../config').AWSCONFIG;
+var AWSCONFIG = require('./../../../config').AWSCONFIG;
 AWS.config.update(AWSCONFIG);
 
 var getList = function(path, callback) {

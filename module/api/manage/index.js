@@ -1,4 +1,4 @@
-var db = require('./db');
+var db = require('./../../db');
 var cramb = require('./cramb');
 
 // 获取专辑列表

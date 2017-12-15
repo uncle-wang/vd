@@ -3,17 +3,17 @@
 	<head>
 		<title>hehehe</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,minimal-ui">
-		<link rel="stylesheet" type="text/css" href="resources/css/video.css">
-		<link rel="stylesheet" type="text/css" href="resources/component/player/player.css">
-		<script type="text/javascript" src="resources/js/hls.min.js"></script>
-		<script type="text/javascript" src="resources/js/vue.js"></script>
+		<link rel="stylesheet" type="text/css" href="resources/web/css/video.css">
+		<link rel="stylesheet" type="text/css" href="resources/web/component/player/player.css">
+		<script type="text/javascript" src="resources/public/hls.min.js"></script>
+		<script type="text/javascript" src="resources/public/vue.js"></script>
 	</head>
 	<body>
 		<div id="player_page">
 			<player :url="videoUrl"></player>
 		</div>
 		<div class="logs" style="height: 200px; overflow: auto; color: #fff"></div>
-		<script type="text/javascript" src="resources/component/player/player.js"></script>
+		<script type="text/javascript" src="resources/web/component/player/player.js"></script>
 		<script type="text/javascript">
 			var vmPlayer = new Vue({
 				el: '#player_page',

@@ -2,12 +2,12 @@
 <html>
 	<head>
 		<title>cramb url</title>
-		<script type="text/javascript" src="resources/js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../resources/public/jquery-2.1.4.min.js"></script>
 	</head>
 	<body>
 		<div class="wrap">
 			<h2>添加媒体-无专辑</h2>
-			<form action="addMedia" method="get">
+			<form action="api/addMedia" method="get">
 				<div>
 					<label>媒体name</label>
 					<input name="name" type="text">
@@ -28,7 +28,7 @@
 				<input type="submit" value="ok">
 			</form>
 			<h2>添加媒体-有专辑</h2>
-			<form action="addMedia" method="get">
+			<form action="api/addMedia" method="get">
 				<div>
 					<label>媒体封面</label>
 					<input type="text" name="cover">
@@ -53,7 +53,7 @@
 				<input type="submit" value="ok">
 			</form>
 			<h2>添加专辑</h2>
-			<form action="addAlbum" method="get">
+			<form action="api/addAlbum" method="get">
 				<div>
 					<label>专辑name</label>
 					<input name="name" type="text">
@@ -73,7 +73,7 @@
 				<input type="submit" value="ok">
 			</form>
 			<h2>媒体断点续传-有专辑</h2>
-			<form action="editMedia" method="get">
+			<form action="api/editMedia" method="get">
 				<div>
 					<label>选择媒体</label>
 					<select name="media_id" id="media_list"></select>
@@ -85,6 +85,6 @@
 				<input type="submit" value="ok">
 			</form>
 		</div>
-		<script type="text/javascript" src="resources/js/cramb.js"></script>
+		<script type="text/javascript" src="../resources/manage/js/cramb.js"></script>
 	</body>
 </html>

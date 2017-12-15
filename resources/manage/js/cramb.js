@@ -1,5 +1,5 @@
 $.ajax({
-	url: 'getAlbumList',
+	url: 'api/getAlbumList',
 	method: 'get',
 	dataType: 'json',
 	success: function(data) {
@@ -11,7 +11,7 @@ $.ajax({
 	}
 });
 $.ajax({
-	url: 'getMediaList',
+	url: 'api/getMediaList',
 	method: 'get',
 	dataType: 'json',
 	success: function(data) {

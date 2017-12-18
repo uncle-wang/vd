@@ -87,15 +87,6 @@ var editMedia = function(param) {
 	cramb(param.cramb_url, parseInt(param.media_id), _publishMedia);
 };
 
-// 获取媒体
-var getMediaDetail = function(mediaId, callback) {
-
-	var query = 'select * from MEDIA where MEDIA_ID=' + mediaId;
-	db(query, function(err, result) {
-		callback(err, result);
-	});
-};
-
 // 发布媒体
 var _publishMedia = function(mediaId) {
 
@@ -115,6 +106,5 @@ module.exports = {
 	addAlbum: addAlbum,
 	getMediaList: getMediaList,
 	addMedia: addMedia,
-	editMedia: editMedia,
-	getMediaDetail: getMediaDetail
+	editMedia: editMedia
 };

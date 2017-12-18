@@ -31,7 +31,7 @@
 							if (searchPair.indexOf('mediaId=') > -1) {
 								var mediaId = searchPair.substr(8);
 								if (mediaId) {
-									var url = 'getMediaDetail?mediaId=' + mediaId;
+									var url = 'api/getMediaDetail?mediaId=' + mediaId;
 									var xhr = new XMLHttpRequest();
 									xhr.open('GET', url);
 									xhr.onload = function() {

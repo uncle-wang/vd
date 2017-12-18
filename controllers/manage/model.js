@@ -59,16 +59,3 @@ app.get('/manage/api/editMedia', function(req, res) {
 	res.send('ok');
 	api.editMedia(req.query);
 });
-
-// 获取媒体详细信息
-app.get('/manage/api/getMediaDetail', function(req, res) {
-
-	api.getMediaDetail(req.query.mediaId, function(err, result) {
-		if (err) {
-			res.send(err);
-		}
-		else {
-			res.send(result[0]);
-		}
-	});
-});

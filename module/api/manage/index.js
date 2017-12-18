@@ -131,7 +131,11 @@ var addMedia = function(param, callback) {
 		callback(err, result);
 		if (!err) {
 			if (result && result.affectedRows == 1) {
-				cramb(param.cramb_url, result.insertId, _publishMedia);
+				cramb(param.cramb_url, result.insertId, function(mediaId) {
+					_publishMedia(mediaId, function(err) {
+						_publishCallback(mediaId, err);
+					});
+				});
 			}
 		}
 	});
@@ -159,6 +163,16 @@ var editMedia = function(param, callback) {
 	});
 };
 
+// 媒体断点续传
+var breakPointMedia = function(param) {
+
+	cramb(param.cramb_url, parseInt(param.media_id), function(mediaId) {
+		_publishMedia(mediaId, function(err) {
+			_publishCallback(mediaId, err);
+		});
+	});
+};
+
 // 删除专辑
 var removeMedia = function(mediaId, callback) {
 
@@ -170,37 +184,34 @@ var removeMedia = function(mediaId, callback) {
 // 发布专辑
 var publishMedia = function(mediaId, callback) {
 
-	db('update MEDIA set MEDIA_PUBLISHED=1 where MEDIA_ID=' + mediaId, function(err, result) {
-		callback(err, result);
-	});
+	_publishMedia(mediaId, callback);
 };
 
 // 下架专辑
 var unpublishMedia = function(mediaId, callback) {
 
 	db('update MEDIA set MEDIA_PUBLISHED=0 where MEDIA_ID=' + mediaId, function(err, result) {
-		callback(err, result);
+		callback(err);
 	});
-};
-
-// 编辑媒体
-var editMedia2 = function(param) {
-
-	cramb(param.cramb_url, parseInt(param.media_id), _publishMedia);
 };
 
 // 发布媒体
-var _publishMedia = function(mediaId) {
+var _publishMedia = function(mediaId, callback) {
 
 	var query = 'update MEDIA set MEDIA_PUBLISHED=1 where MEDIA_ID=' + mediaId;
-	db(query, function(err, result) {
-		if (err) {
-			console.log('publish media(' + mediaId + ') error', err);
-		}
-		else {
-			console.log('publish media(' + mediaId + ') successfully');
-		}
+	db(query, function(err) {
+		callback(err);
 	});
+};
+
+// 发布回调
+var _publishCallback = function(mediaId, err) {
+	if (err) {
+		console.log('publish media(' + mediaId + ') error', err);
+	}
+	else {
+		console.log('publish media(' + mediaId + ') successfully');
+	}
 };
 
 module.exports = {
@@ -215,6 +226,7 @@ module.exports = {
 	getMediaList: getMediaList,
 	addMedia: addMedia,
 	editMedia: editMedia,
+	breakPointMedia: breakPointMedia,
 	removeMedia: removeMedia,
 	publishMedia: publishMedia,
 	unpublishMedia: unpublishMedia

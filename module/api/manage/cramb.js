@@ -64,7 +64,14 @@ var cramb = function(listUrl, mediaId, callback) {
 					console.log(mediaId + ' - ' + fileUrls.length + ' files');
 					dl(fileUrlPre, fileUrls, cdnPath, mediaId, callback);
 				}
+				else {
+					console.log('ok: all files has been uploaded');
+					callback(mediaId);
+				}
 			});
+		}
+		else {
+			console.log('error:' + mediaId + ',' + listUrl + ',data empty');
 		}
 	});
 };

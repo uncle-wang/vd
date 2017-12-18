@@ -14,7 +14,7 @@
 	</head>
 	<body>
 		<div id="medias">
-			<div v-show="!editMode">
+			<div v-show="mode==0">
 				<h2>添加</h2>
 				<select v-model="mediaAddData.type">
 					<option value="0">电影</option>
@@ -67,7 +67,7 @@
 					<input type="submit" value="ok">
 				</form>
 			</div>
-			<div v-show="editMode">
+			<div v-show="mode==1">
 				<h2>编辑</h2>
 				<form action="api/editMedia" method="get" v-show="mediaEditData.type==0" @submit="checkEditForm">
 					<div>
@@ -85,7 +85,7 @@
 					<input type="hidden" name="media_id" v-model="mediaEditData.mediaId">
 					<input type="hidden" name="type" value="0">
 					<input type="submit" value="ok">
-					<input type="button" value="cancel" @click="cancelEdit">
+					<input type="button" value="cancel" @click="showAdd">
 				</form>
 				<form action="api/editMedia" method="get" v-show="mediaEditData.type==1" @submit="checkEditForm">
 					<div>
@@ -109,7 +109,18 @@
 					<input type="hidden" name="media_id" v-model="mediaEditData.mediaId">
 					<input type="hidden" name="type" value="1">
 					<input type="submit" value="ok">
-					<input type="button" value="cancel" @click="cancelEdit">
+					<input type="button" value="cancel" @click="showAdd">
+				</form>
+			</div>
+			<div v-show="mode==2">
+				<form action="api/breakPointMedia" method="get" @submit="checkBreakForm">
+					<div>
+						<label>源地址</label>
+						<input type="text" name="cramb_url" v-model="mediaBreakData.crambUrl">
+					</div>
+					<input type="hidden" name="media_id" v-model="mediaBreakData.mediaId">
+					<input type="submit" value="ok">
+					<input type="button" value="cancel" @click="showAdd">
 				</form>
 			</div>
 			<h2>媒体列表</h2>
@@ -148,6 +159,7 @@
 						<a @click="showEdit(media)">编辑</a>
 						<a v-if="media.MEDIA_PUBLISHED==0" :href="'api/publishMedia?media_id='+media.MEDIA_ID">发布</a>
 						<a v-if="media.MEDIA_PUBLISHED==1" :href="'api/unpublishMedia?media_id='+media.MEDIA_ID">下架</a>
+						<a @click="showBreakpoint(media.MEDIA_ID)">续传</a>
 						<a v-if="media.MEDIA_PUBLISHED==0" @click="deleteMedia" :href="'api/removeMedia?media_id='+media.MEDIA_ID">删除</a>
 					</td>
 				</tr>

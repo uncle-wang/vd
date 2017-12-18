@@ -149,6 +149,13 @@ app.get('/manage/api/editMedia', function(req, res) {
 	});
 });
 
+// 媒体断点续传
+app.get('/manage/api/breakPointMedia', function(req, res) {
+
+	api.breakPointMedia(req.query);
+	res.redirect('/manage/medias');
+});
+
 // 删除媒体
 app.get('/manage/api/removeMedia', function(req, res) {
 
@@ -167,7 +174,7 @@ app.get('/manage/api/removeMedia', function(req, res) {
 app.get('/manage/api/publishMedia', function(req, res) {
 
 	var mediaId = req.query.media_id;
-	api.publishMedia(mediaId, function(err, result) {
+	api.publishMedia(mediaId, function(err) {
 		if (err) {
 			res.send(err);
 		}

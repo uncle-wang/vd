@@ -4,9 +4,9 @@ var vm = new Vue({
 
 	data: {
 
+		mode: 0,
 		albumId: '',
 		mediaType: 0,
-		editMode: false,
 		albumList: [],
 		mediaList: [],
 		mediaAddData: {
@@ -23,6 +23,10 @@ var vm = new Vue({
 			title: '',
 			albumId: '',
 			albumIndex: ''
+		},
+		mediaBreakData: {
+			mediaId: '',
+			crambUrl: ''
 		}
 	},
 
@@ -111,7 +115,7 @@ var vm = new Vue({
 		},
 		showEdit: function(media) {
 
-			this.editMode = true;
+			this.mode = 1;
 			this.mediaEditData.type = media.MEDIA_TYPE;
 			this.mediaEditData.mediaId = media.MEDIA_ID;
 			this.mediaEditData.name = media.MEDIA_NAME;
@@ -120,9 +124,14 @@ var vm = new Vue({
 			this.mediaEditData.albumId = media.MEDIA_ALBUM;
 			this.mediaEditData.albumIndex = media.MEDIA_ALBUM_INDEX;
 		},
-		cancelEdit: function() {
+		showBreakpoint: function(mediaId) {
 
-			this.editMode = false;
+			this.mode = 2;
+			this.mediaBreakData.mediaId = mediaId;
+		},
+		showAdd: function() {
+
+			this.mode = 0;
 		},
 		checkAddForm: function(e) {
 
@@ -155,6 +164,15 @@ var vm = new Vue({
 				}
 			}
 			alert('column required');
+			e.preventDefault();
+			return false;
+		},
+		checkBreakForm: function(e) {
+
+			if (this.mediaBreakData.crambUrl) {
+				return;
+			}
+			alert('crambUrl required');
 			e.preventDefault();
 			return false;
 		}

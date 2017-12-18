@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Albums</title>
+		<script type="text/javascript" src="../resources/public/vue.js"></script>
+		<script type="text/javascript" src="../resources/public/jquery-2.1.4.min.js"></script>
+		<style type="text/css">
+			table a {
+				color: -webkit-link;
+				cursor: pointer;
+				text-decoration: underline;
+			}
+		</style>
+		<link rel="stylesheet" type="text/css" href="../resources/manage/css/albums.css">
+	</head>
+	<body>
+		<div id="albums">
+			<div v-show="!editMode">
+				<h2>添加专辑</h2>
+				<form action="api/addAlbum" method="get" @submit="checkAddForm">
+					<div>
+						<label>专辑name</label>
+						<input name="name" type="text" v-model="albumAddData.name">
+					</div>
+					<div>
+						<label>专辑长度</label>
+						<input name="length" type="text" v-model="albumAddData.length">
+					</div>
+					<div>
+						<label>专辑封面</label>
+						<input type="text" name="cover">
+					</div>
+					<div>
+						<label>专辑title</label>
+						<input type="text" name="title">
+					</div>
+					<input type="submit" value="ok">
+				</form>
+			</div>
+			<div v-show="editMode">
+				<h2>编辑专辑</h2>
+				<form action="api/editAlbum" method="get" @submit="checkEditForm">
+					<div>
+						<label>专辑name</label>
+						<input name="name" type="text" v-model="albumEditData.name">
+					</div>
+					<div>
+						<label>专辑长度</label>
+						<input name="length" type="text" v-model="albumEditData.length">
+					</div>
+					<div>
+						<label>专辑封面</label>
+						<input type="text" name="cover" v-model="albumEditData.cover">
+					</div>
+					<div>
+						<label>专辑title</label>
+						<input type="text" name="title" v-model="albumEditData.title">
+					</div>
+					<input type="hidden" name="album_id" v-model="albumEditData.id">
+					<input type="submit" value="ok">
+					<input type="button" value="cancel" @click="cancelEdit">
+				</form>
+			</div>
+			<h2>专辑列表</h2>
+			<table id="album_list">
+				<tr>
+					<th>id</th>
+					<th>name</th>
+					<th>长度</th>
+					<th>封面</th>
+					<th>title</th>
+					<th>是否完结</th>
+					<th>是否发布</th>
+					<th>创建时间</th>
+					<th>操作</th>
+				</tr>
+				<tr v-for="album in albumList">
+					<td>{{album.ALBUM_ID}}</td>
+					<td>{{album.ALBUM_NAME}}</td>
+					<td>{{album.ALBUM_LENGTH}}</td>
+					<td>{{album.ALBUM_COVER}}</td>
+					<td>{{album.ALBUM_TITLE}}</td>
+					<td>{{album.ALBUM_STATUS | albumStatusFilter}}</td>
+					<td>{{album.ALBUM_PUBLISHED | albumPublishedFilter}}</td>
+					<td>{{album.ALBUM_CREATE_TIME | createTimeFilter}}</td>
+					<td>
+						<a @click="showEdit(album)">编辑</a>
+						<a v-if="album.ALBUM_PUBLISHED==0" :href="'api/publishAlbum?album_id='+album.ALBUM_ID">发布</a>
+						<a v-if="album.ALBUM_PUBLISHED==1" :href="'api/unpublishAlbum?album_id='+album.ALBUM_ID">下架</a>
+						<a v-if="album.ALBUM_STATUS==0" :href="'api/overAlbum?album_id='+album.ALBUM_ID">完结</a>
+						<a v-if="album.ALBUM_STATUS==1" :href="'api/unoverAlbum?album_id='+album.ALBUM_ID">取消完结</a>
+						<a v-if="album.ALBUM_PUBLISHED==0" @click="deleteAlbum" :href="'api/removeAlbum?album_id='+album.ALBUM_ID">删除</a>
+						<a :href="'medias?album_id='+album.ALBUM_ID">管理媒体</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<script type="text/javascript" src="../resources/manage/js/albums.js"></script>
+	</body>
+</html>

@@ -36,10 +36,66 @@ var addAlbum = function(param, callback) {
 	});
 };
 
+// 编辑专辑
+var editAlbum = function(param, callback) {
+
+	var keys = 'ALBUM_NAME="' + param.name + '",ALBUM_LENGTH=' + param.length;
+	if (param.cover) {
+		keys = keys + ',ALBUM_COVER="' + param.cover + '"';
+	}
+	if (param.title) {
+		keys = keys + ',ALBUM_TITLE="' + param.title + '"';
+	}
+	var query = 'update ALBUM set ' + keys + ' where ALBUM_ID=' + param.album_id;
+	db(query, function(err, result) {
+		callback(err, result);
+	});
+};
+
+// 删除专辑
+var removeAlbum = function(albumId, callback) {
+
+	db('delete from ALBUM where ALBUM_ID=' + albumId, function(err, result) {
+		callback(err, result);
+	});
+};
+
+// 发布专辑
+var publishAlbum = function(albumId, callback) {
+
+	db('update ALBUM set ALBUM_PUBLISHED=1 where ALBUM_ID=' + albumId, function(err, result) {
+		callback(err, result);
+	});
+};
+
+// 下架专辑
+var unpublishAlbum = function(albumId, callback) {
+
+	db('update ALBUM set ALBUM_PUBLISHED=0 where ALBUM_ID=' + albumId, function(err, result) {
+		callback(err, result);
+	});
+};
+
+// 专辑置完结
+var overAlbum = function(albumId, callback) {
+
+	db('update ALBUM set ALBUM_STATUS=1 where ALBUM_ID=' + albumId, function(err, result) {
+		callback(err, result);
+	});
+};
+
+// 专辑置未完结
+var unoverAlbum = function(albumId, callback) {
+
+	db('update ALBUM set ALBUM_STATUS=0 where ALBUM_ID=' + albumId, function(err, result) {
+		callback(err, result);
+	});
+};
+
 // 获取媒体列表
 var getMediaList = function(callback) {
 
-	var query = 'select * from MEDIA order by MEDIA_CREATE_TIME desc';
+	var query = 'select * from MEDIA order by MEDIA_ALBUM,MEDIA_ALBUM_INDEX';
 	db(query, function(err, result) {
 		callback(err, result);
 	});
@@ -82,7 +138,53 @@ var addMedia = function(param, callback) {
 };
 
 // 编辑媒体
-var editMedia = function(param) {
+var editMedia = function(param, callback) {
+
+	var keys;
+	if (parseInt(param.type) === 0) {
+		keys = 'MEDIA_NAME="' + param.name + '"';
+	}
+	else {
+		keys = 'MEDIA_ALBUM=' + param.album + ',MEDIA_ALBUM_INDEX=' + param.album_index;
+	}
+	if (param.cover) {
+		keys = keys + ',MEDIA_COVER="' + param.cover + '"';
+	}
+	if (param.title) {
+		keys = keys + ',MEDIA_TITLE="' + param.title + '"';
+	}
+	var query = 'update MEDIA set ' + keys + ' where MEDIA_ID=' + param.media_id;
+	db(query, function(err, result) {
+		callback(err, result);
+	});
+};
+
+// 删除专辑
+var removeMedia = function(mediaId, callback) {
+
+	db('delete from MEDIA where MEDIA_ID=' + mediaId, function(err, result) {
+		callback(err, result);
+	});
+};
+
+// 发布专辑
+var publishMedia = function(mediaId, callback) {
+
+	db('update MEDIA set MEDIA_PUBLISHED=1 where MEDIA_ID=' + mediaId, function(err, result) {
+		callback(err, result);
+	});
+};
+
+// 下架专辑
+var unpublishMedia = function(mediaId, callback) {
+
+	db('update MEDIA set MEDIA_PUBLISHED=0 where MEDIA_ID=' + mediaId, function(err, result) {
+		callback(err, result);
+	});
+};
+
+// 编辑媒体
+var editMedia2 = function(param) {
 
 	cramb(param.cramb_url, parseInt(param.media_id), _publishMedia);
 };
@@ -104,7 +206,16 @@ var _publishMedia = function(mediaId) {
 module.exports = {
 	getAlbumList: getAlbumList,
 	addAlbum: addAlbum,
+	editAlbum: editAlbum,
+	removeAlbum: removeAlbum,
+	publishAlbum: publishAlbum,
+	unpublishAlbum: unpublishAlbum,
+	overAlbum: overAlbum,
+	unoverAlbum: unoverAlbum,
 	getMediaList: getMediaList,
 	addMedia: addMedia,
-	editMedia: editMedia
+	editMedia: editMedia,
+	removeMedia: removeMedia,
+	publishMedia: publishMedia,
+	unpublishMedia: unpublishMedia
 };

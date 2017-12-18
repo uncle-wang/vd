@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Medias</title>
+		<script type="text/javascript" src="../resources/public/vue.js"></script>
+		<script type="text/javascript" src="../resources/public/jquery-2.1.4.min.js"></script>
+		<style type="text/css">
+			table a {
+				color: -webkit-link;
+				cursor: pointer;
+				text-decoration: underline;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="medias">
+			<div v-show="!editMode">
+				<h2>添加</h2>
+				<select v-model="mediaAddData.type">
+					<option value="0">电影</option>
+					<option value="1">专辑</option>
+				</select>
+				<form action="api/addMedia" method="get" v-show="mediaAddData.type==0" @submit="checkAddForm">
+					<div>
+						<label>媒体name</label>
+						<input name="name" type="text" v-model="mediaAddData.name">
+					</div>
+					<div>
+						<label>媒体封面</label>
+						<input type="text" name="cover">
+					</div>
+					<div>
+						<label>媒体title</label>
+						<input type="text" name="title">
+					</div>
+					<div>
+						<label>源地址</label>
+						<input type="text" name="cramb_url" v-model="mediaAddData.crambUrl">
+					</div>
+					<input type="hidden" name="type" value="0">
+					<input type="submit" value="ok">
+				</form>
+				<form action="api/addMedia" method="get" v-show="mediaAddData.type==1" @submit="checkAddForm">
+					<div>
+						<label>媒体封面</label>
+						<input type="text" name="cover">
+					</div>
+					<div>
+						<label>媒体title</label>
+						<input type="text" name="title">
+					</div>
+					<div>
+						<label>媒体专辑</label>
+						<select name="album">
+							<option v-for="album in albumList" :value="album.ALBUM_ID">{{album.ALBUM_NAME}}</option>
+						</select>
+					</div>
+					<div>
+						<label>媒体专辑序列</label>
+						<input type="text" name="album_index" v-model="mediaAddData.albumIndex">
+					</div>
+					<div>
+						<label>源地址</label>
+						<input type="text" name="cramb_url" v-model="mediaAddData.crambUrl">
+					</div>
+					<input type="hidden" name="type" value="1">
+					<input type="submit" value="ok">
+				</form>
+			</div>
+			<div v-show="editMode">
+				<h2>编辑</h2>
+				<form action="api/editMedia" method="get" v-show="mediaEditData.type==0" @submit="checkEditForm">
+					<div>
+						<label>媒体name</label>
+						<input name="name" type="text" v-model="mediaEditData.name">
+					</div>
+					<div>
+						<label>媒体封面</label>
+						<input type="text" name="cover" v-model="mediaEditData.cover">
+					</div>
+					<div>
+						<label>媒体title</label>
+						<input type="text" name="title" v-model="mediaEditData.title">
+					</div>
+					<input type="hidden" name="media_id" v-model="mediaEditData.mediaId">
+					<input type="hidden" name="type" value="0">
+					<input type="submit" value="ok">
+					<input type="button" value="cancel" @click="cancelEdit">
+				</form>
+				<form action="api/editMedia" method="get" v-show="mediaEditData.type==1" @submit="checkEditForm">
+					<div>
+						<label>媒体封面</label>
+						<input type="text" name="cover" v-model="mediaEditData.cover">
+					</div>
+					<div>
+						<label>媒体title</label>
+						<input type="text" name="title" v-model="mediaEditData.title">
+					</div>
+					<div>
+						<label>媒体专辑</label>
+						<select name="album" v-model="mediaEditData.albumId">
+							<option v-for="album in albumList" :value="album.ALBUM_ID">{{album.ALBUM_NAME}}</option>
+						</select>
+					</div>
+					<div>
+						<label>媒体专辑序列</label>
+						<input type="text" name="album_index" v-model="mediaEditData.albumIndex">
+					</div>
+					<input type="hidden" name="media_id" v-model="mediaEditData.mediaId">
+					<input type="hidden" name="type" value="1">
+					<input type="submit" value="ok">
+					<input type="button" value="cancel" @click="cancelEdit">
+				</form>
+			</div>
+			<h2>媒体列表</h2>
+			<select v-model="mediaType">
+				<option value="0">电影</option>
+				<option value="1">专辑</option>
+			</select>
+			<select v-model="albumId" v-show="mediaType==1">
+				<option value="">All</option>
+				<option v-for="album in albumList" :value="album.ALBUM_ID">{{album.ALBUM_NAME}}</option>
+			</select>
+			<table id="media_list">
+				<tr>
+					<th>id</th>
+					<th v-show="mediaType==0">name</th>
+					<th v-show="mediaType==1">专辑</th>
+					<th v-show="mediaType==1">序号</th>
+					<th>封面</th>
+					<th>title</th>
+					<th>播放文件</th>
+					<th>是否发布</th>
+					<th>创建时间</th>
+					<th>操作</th>
+				</tr>
+				<tr v-for="media in mediaListShow">
+					<td>{{media.MEDIA_ID}}</td>
+					<td v-show="mediaType==0">{{media.MEDIA_NAME}}</td>
+					<td v-show="mediaType==1">{{getAlbumName(media.MEDIA_ALBUM)}}</td>
+					<td v-show="mediaType==1">{{media.MEDIA_ALBUM_INDEX}}</td>
+					<td>{{media.MEDIA_COVER}}</td>
+					<td>{{media.MEDIA_TITLE}}</td>
+					<td>{{media.MEDIA_PLAYLIST}}</td>
+					<td>{{media.MEDIA_PUBLISHED | mediaPublishedFilter}}</td>
+					<td>{{media.MEDIA_CREATE_TIME | createTimeFilter}}</td>
+					<td>
+						<a @click="showEdit(media)">编辑</a>
+						<a v-if="media.MEDIA_PUBLISHED==0" :href="'api/publishMedia?media_id='+media.MEDIA_ID">发布</a>
+						<a v-if="media.MEDIA_PUBLISHED==1" :href="'api/unpublishMedia?media_id='+media.MEDIA_ID">下架</a>
+						<a v-if="media.MEDIA_PUBLISHED==0" @click="deleteMedia" :href="'api/removeMedia?media_id='+media.MEDIA_ID">删除</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<script type="text/javascript" src="../resources/manage/js/medias.js"></script>
+	</body>
+</html>
